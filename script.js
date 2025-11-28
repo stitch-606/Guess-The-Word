@@ -8,15 +8,45 @@ document.querySelector("footer").innerHTML = `${gameName} Created By Stitch All 
 let numbersOfTries = 6;
 let numbersOfLetters;
 let currentTry = 1;
-let numberOfHints = 3;
+
+// Protected Hints Counter - Cannot be modified from console
+let _numberOfHints = 3;
+Object.defineProperty(window, 'numberOfHints', {
+  get() {
+    return _numberOfHints;
+  },
+  set(value) {
+    console.warn("⚠️ Hint count cannot be modified!");
+    return false;
+  },
+  configurable: false
+});
+
+// Score Tracking
+let wordsGuessed = 0;
+let wordsPlayed = 0;
 
 // Manage Words
 let wordToGuess = "";
-// Use words from the external `words.js` file. Fallback to a small list if `WORDS` isn't defined.
-const words = typeof WORDS !== 'undefined' && Array.isArray(WORDS) && WORDS.length > 0
+// Use words from the external `words.js` file. Support either a simple string list
+// or objects with `{word, category}`. Fallback to a small list if `WORDS` isn't defined.
+let wordCategory = "General";
+const wordsList = (typeof WORDS !== 'undefined' && Array.isArray(WORDS) && WORDS.length > 0)
   ? WORDS
-  : words.js ;
-wordToGuess = words[Math.floor(Math.random() * words.length)].toLowerCase();
+  : ["apple", "train", "computer", "banana"];
+const wordEntries = wordsList
+  .map((w) => {
+    if (typeof w === "string") return { word: w, category: "General" };
+    if (w && typeof w.word === "string") return { word: w.word, category: w.category || "General" };
+    return null;
+  })
+  .filter(Boolean);
+const chosenEntry = wordEntries[Math.floor(Math.random() * wordEntries.length)];
+wordToGuess = chosenEntry.word.toLowerCase();
+wordCategory = chosenEntry.category || "General";
+// Show category on the page (element added in `index.html`)
+const categoryEl = document.querySelector(".category-name");
+if (categoryEl) categoryEl.innerText = wordCategory;
 // Use the chosen word's length so the number of letters is dynamic
 numbersOfLetters = wordToGuess.length;
 let messageArea = document.querySelector(".message");
@@ -25,6 +55,24 @@ let messageArea = document.querySelector(".message");
 document.querySelector(".hint span").innerHTML = numberOfHints;
 const getHintButton = document.querySelector(".hint");
 getHintButton.addEventListener("click", getHint);
+
+// Protect Hint Button from HTML tampering
+// Monitor for any attempts to remove the disabled attribute
+const hintButtonObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
+      if (_numberOfHints === 0 && !getHintButton.hasAttribute('disabled')) {
+        getHintButton.setAttribute('disabled', '');
+        console.warn("⚠️ Hint button tampering detected and blocked!");
+      }
+    }
+  });
+});
+
+hintButtonObserver.observe(getHintButton, {
+  attributes: true,
+  attributeFilter: ['disabled']
+});
 
 function generateInput() {
   const inputsContainer = document.querySelector(".inputs");
@@ -77,6 +125,10 @@ function generateInput() {
         const prevInput = currentIndex - 1;
         if (prevInput >= 0) inputs[prevInput].focus();
       }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        guessButton.click();
+      }
     });
   });
 }
@@ -114,9 +166,14 @@ function handleGuesses() {
   // Check If User Win Or Lose
   if (successGuess) {
     messageArea.innerHTML = `You Win The Word Is <span>${wordToGuess}</span>`;
-    if (numberOfHints === 2) {
+    if (_numberOfHints === 2) {
       messageArea.innerHTML = `<p>Congratz You Didn't Use Hints</p>`;
     }
+
+    // Increment words guessed
+    wordsGuessed++;
+    wordsPlayed++;
+    updateScoreDisplay();
 
     // Add Disabled Class On All Try Divs
     let allTries = document.querySelectorAll(".inputs > div");
@@ -126,6 +183,10 @@ function handleGuesses() {
     guessButton.disabled = true;
     getHintButton.disabled = true;
     tryAgainButton.style.display = "block";
+    
+    if (_numberOfHints === 3) {
+      messageArea.innerHTML = `<p>Congratz You Didn't Use Hints</p>`;
+    }
   } else {
     document.querySelector(`.try-${currentTry}`).classList.add("disabled-inputs");
     const currentTryInputs = document.querySelectorAll(`.try-${currentTry} input`);
@@ -141,6 +202,10 @@ function handleGuesses() {
       document.querySelector(`.try-${currentTry}`).classList.remove("disabled-inputs");
       el.children[1].focus();
     } else {
+      // Increment words played (but not guessed)
+      wordsPlayed++;
+      updateScoreDisplay();
+
       // Disable Guess Button and show Try Again button
       guessButton.disabled = true;
       getHintButton.disabled = true;
@@ -151,11 +216,11 @@ function handleGuesses() {
 }
 
 function getHint() {
-  if (numberOfHints > 0) {
-    numberOfHints--;
-    document.querySelector(".hint span").innerHTML = numberOfHints;
+  if (_numberOfHints > 0) {
+    _numberOfHints--;
+    document.querySelector(".hint span").innerHTML = _numberOfHints;
   }
-  if (numberOfHints === 0) {
+  if (_numberOfHints === 0) {
     getHintButton.disabled = true;
   }
 
@@ -191,20 +256,25 @@ function handleBackspace(event) {
 
 function restartGame() {
   // Reset game state
-  wordToGuess = words[Math.floor(Math.random() * words.length)].toLowerCase();
+  const newChosen = wordEntries[Math.floor(Math.random() * wordEntries.length)];
+  wordToGuess = newChosen.word.toLowerCase();
+  wordCategory = newChosen.category || "General";
   numbersOfLetters = wordToGuess.length;
   currentTry = 1;
-  numberOfHints = 3;
+  _numberOfHints = 3;
   
   // Clear message and inputs
   messageArea.innerHTML = "";
   document.querySelector(".inputs").innerHTML = "";
   
   // Update hint display and re-enable buttons
-  document.querySelector(".hint span").innerHTML = numberOfHints;
+  document.querySelector(".hint span").innerHTML = _numberOfHints;
   guessButton.disabled = false;
   getHintButton.disabled = false;
   tryAgainButton.style.display = "none";
+  // Update category display
+  const categoryDisplay = document.querySelector(".category-name");
+  if (categoryDisplay) categoryDisplay.innerText = wordCategory;
   
   // Generate new inputs and focus
   generateInput();
@@ -216,3 +286,9 @@ document.addEventListener("keydown", handleBackspace);
 window.onload = function () {
   generateInput();
 };
+
+// Score Management Functions
+function updateScoreDisplay() {
+  document.querySelector(".words-guessed").innerHTML = wordsGuessed;
+  document.querySelector(".words-played").innerHTML = wordsPlayed;
+}

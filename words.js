@@ -1,6 +1,5 @@
-// Large word list (kept as a global `WORDS` array for the game to use)
-// This list contains a variety of common English words of varying lengths.
-const WORDS = [
+// Word list (kept as an array of strings) — we'll programmatically assign categories below
+const WORD_STRINGS = [
   "hi","cat","dog","sun","moon","book","apple","plane","train","car",
   "house","garden","puzzle","random","developer","javascript","coding","program",
   "computer","keyboard","monitor","window","button","screen","network","internet",
@@ -140,4 +139,42 @@ const WORDS = [
   "poker","chess","checkers","scrabble","wordle","hangman","puzzle","riddle"
 ];
 
-// End of list
+// Category keyword sets — comprehensive categorization for all words
+const CATEGORY_KEYWORDS = {
+  Animals: new Set(["cat","dog","bird","fish","mammal","reptile","insect","butterfly","beetle","ant","bee","worm","spider","crab","animal"]),
+  Food: new Set(["apple","banana","orange","grape","coffee","morning","evening","cook","bake","fry","roast","grill","steam","stew","simmer","taste","flavor","spice","herb","salt","pepper","sweet","sour","bitter","savory","umami","delicious","yummy","tasty","fresh","ripe"]),
+  Transport: new Set(["plane","train","car","boat","ship","yacht","canoe","kayak","submarine","submersible","rocket","satellite","probe","shuttle","aircraft","helicopter","ufo","drone","vessel"]),
+  Tech: new Set(["computer","keyboard","monitor","window","button","screen","network","internet","server","client","socket","request","response","message","package","module","function","variable","constant","array","object","string","number","boolean","undefined","null","element","document","browser","mobile","desktop","code","script","snippet","gist","repo","repository","branch","commit","push","pull","clone","fork","merge","rebase","checkout","issue","bug","ticket","task","story","epic","sprint","backlog","api","endpoint","http","https","tcp","udp","ssl","tls","ssh","ftp","database","query","index","schema","table","column","row","record","javascript","coding","program","developer","elzero","stitch"]),
+  UI: new Set(["button","modal","dialog","card","panel","tab","pane","window","label","title","header","footer","nav","menu","toolbar","sidebar","icon","image","photo","avatar","thumbnail","gallery","slide","carousel","video","audio","media","play","pause","stop","record","stream","volume","mute","caption","subtitle","transcript","lyrics","input","textarea","checkbox","radio","dropdown","option","list"]),
+  Nature: new Set(["sun","moon","star","planet","galaxy","universe","cosmos","nebula","comet","asteroid","meteor","space","orbit","gravity","vacuum","north","south","east","west","up","down","left","right","forward","backward","inside","outside","top","bottom","center","middle","ocean","sea","lake","river","pond","stream","beach","shore","coast","harbor","island","coral","reef","mountain","valley","hill","plateau","forest","jungle","desert","tundra","savanna","plain","weather","temperature","pressure","humidity","precipitate","storm","hurricane","tornado","earthquake","eruption","volcano","lava","magma","seismic","tectonic","climate"]),
+  Home: new Set(["house","garden","kitchen","bedroom","bathroom","livingroom","dining","garage","attic","basement","furniture","sofa","chair","table","desk","shelf","wardrobe","cabinet","tool","hammer","screwdriver","wrench","drill","saw","knife","blade"]),
+  School: new Set(["school","student","teacher","lesson","chapter","module","section","project","course","class","lecture","seminar","lab","workshop","exam","quiz","test","assignment","homework","presentation","report","degree","diploma","certificate","credential","curriculum","learning","training","inference","predict","classify","cluster","regress","optimize"]),
+  Music: new Set(["song","track","album","artist","band","concert","show","stage","audience","crowd","ticket","pass","event","beat","rhythm","melody","harmony","volume","mute","tempo","lyrics"]),
+  Time: new Set(["morning","evening","date","time","clock","alarm","reminder","schedule","calendar","event","plan","task","todo","goal","milestone","deadline","priority","status"]),
+  Health: new Set(["health","medicine","doctor","nurse","clinic","hospital","surgery","therapy","vaccine","virus","bacteria","pathogen","immune","antibody","diagnose","symptom","fitness","exercise","diet","nutrition","sleep","rest","stress","wellness"]),
+  Finance: new Set(["finance","bank","credit","loan","debt","asset","liability","equity","investment","stock","bond","portfolio","fund","capital","dividend","interest","cryptocurrency","bitcoin","ethereum","blockchain","wallet","token","mining","hash","economy","market","trade","commerce","industry","business","company","firm","brand","product","service","client","customer","consumer","user","buyer","seller","vendor","supplier","partner","affiliate","distributor","retailer","wholesale"]),
+  Games: new Set(["game","play","score","level","stage","win","lose","tie","turn","move","action","strategy","skill","chance","luck","coin","dice","card","deck","hand","draw","deal","shuffle","poker","chess","checkers","scrabble","wordle","hangman","puzzle","riddle"]),
+  Programming: new Set(["coding","program","developer","code","script","function","variable","constant","array","object","string","number","boolean","array","stack","queue","tree","graph","node","edge","path","route","router","link","redirect","proxy","gateway","compile","build","test","debug","trace","error","warning","info","success","failure","retry","timeout","connect","disconnect","listen","accept","authorize","authenticate","encrypt","decrypt","secure","private","public","protected","access","permission","policy","role","admin","user","guest","login","logout","register","profile","settings"]),
+  Design: new Set(["design","graphic","ux","ui","prototype","mockup","wireframe","sketch","paint","brush","canvas","easel","gallery","studio","museum","exhibit","style","layout","grid","flex","column","row","center","align","justify","margin","padding","border","radius","shadow","opacity","color","background","foreground","font","typeface","weight","size","scale","zoom","pan","scroll","swipe","tap","click","hover","focus","select","theme"]),
+  Action: new Set(["create","update","delete","remove","insert","select","filter","search","find","replace","render","compile","build","test","debug","trace","error","warning","success","failure","retry","timeout","connect","disconnect","listen","accept","open","close","start","stop","pause","resume","finish","complete","ready","set","go","launch","init","initiate","spawn","package","bundle","compress","archive","extract","deploy","release","install","uninstall","upgrade","downgrade","rollback","restore","backup","snapshot","monitor","observe","track","log","record","report","analyze","inspect","measure","benchmark","profile","optimize","tune","scale","cluster","shard","repair","fix","patch","renew","replace","clean","wash","wipe","scrub","polish","tidy","organize","sort","count","add","subtract","multiply","divide","calculate","compute","evaluate"]),
+  Random: new Set(["hi","puzzle","random","book","sun","moon","window","screen","coffee","afternoon","stitch","hello","word","letter","alphabet","dictionary","thesaurus","grammar","syntax","semantics","meaning","context","math","science","biology","chemistry","physics","astronomy","geology","ecology","logic","reason","argument","proof","theorem","lemma","hypothesis","theory","experiment","research","study","paper","article","journal","conference","reading","writing","memory","story","novel","poem","author","writer","editor","publisher","reader","audience","critic","review","culture","society","community","tradition","custom","festival","holiday","ceremony","language","speech","dialogue","conversation","sentence","phrase","history","future","past","present","simple","complex","easy","hard","difficult","tricky","clear","obvious","bright","dark","light","shadow","glow","shine","spark","flash","happy","sad","angry","calm","excited","bored","curious","surprised","love","hate","like","dislike","prefer","choose","select","reject","build","create","compose","craft","make","assemble","construct","form","destroy","break","shatter","collapse","fail","crash","burn","melt","alpha","beta","gamma","delta","epsilon","zeta","theta","lambda","sigma","omega","pi","tau","phi","chi","psi","mu","central","coastal","inland","urban","rural","suburban","travel","trip","journey","vacation","tour","itinerary","passport","visa","booking","hotel","hostel","camp","cabin","resort","lodging","virtue","honor","respect","trust","justice","peace","conflict","war","treaty","alliance","enemy","friend","ally"])
+};
+
+// Helper: determine categories for a word (guarantees at least one category)
+function detectCategories(word) {
+  const matches = [];
+  const w = String(word).toLowerCase();
+  for (const [cat, set] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (set.has(w)) matches.push(cat);
+  }
+  return matches.length > 0 ? matches : ["General"];
+}
+
+// Build final WORDS array as objects: { word, category }
+const WORDS = WORD_STRINGS.map((w) => {
+  const cats = detectCategories(w);
+  const category = cats[0]; // Use only the first category (primary)
+  return { word: w, category };
+});
+
+// End of file

@@ -30,6 +30,34 @@ h1 {
   /* Dark theme game area */
 }
 
+.category {
+  background: linear-gradient(135deg, #f44336 0%, #ff6b6b 100%);
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(244, 67, 54, 0.3);
+  letter-spacing: 1px;
+  width: 500px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.category .category-name {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 12px;
+  border-radius: 5px;
+  margin-left: 10px;
+  text-transform: uppercase;
+}
+
 .guess-game .game-area .inputs > div {
   margin-bottom: 20px;
   display: flex;
@@ -126,17 +154,17 @@ h1 {
 .guess-game .key-colors .key-color {
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding: 10px;
   background-color: #2a2a2a;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: #e0e0e0;
 }
 
 .guess-game .key-colors .key-color .key {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .guess-game .key-colors .key-color .key.in-place {
@@ -152,7 +180,7 @@ h1 {
 }
 
 .guess-game .key-colors .key-color .key-text {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: bold;
   color: #e0e0e0;
 }
@@ -175,6 +203,47 @@ h1 {
 .message p {
   margin-top: 15px;
 }
+
+.score-display {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border-left: 4px solid var(--primary-color);
+  min-width: 220px;
+  margin-left: 40px;
+}
+
+.score-display h3 {
+  margin: 0 0 10px;
+  color: var(--primary-color);
+  font-size: 16px;
+}
+
+.score-display p {
+  margin: 0;
+  color: #e0e0e0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.score-display .words-guessed {
+  color: #4caf50;
+  font-size: 22px;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.guess-game .key-colors {
+  margin-left: 40px;
+  min-width: 250px;
+  flex-shrink: 0;
+}
+
 footer {
   text-align: center;
   padding: 20px;
