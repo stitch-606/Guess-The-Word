@@ -10,7 +10,7 @@ let numbersOfLetters;
 let currentTry = 1;
 
 // Protected Hints Counter - Cannot be modified from console
-let _numberOfHints = 3;
+let _numberOfHints = 2;
 Object.defineProperty(window, 'numberOfHints', {
   get() {
     return _numberOfHints;
