@@ -10,7 +10,7 @@ let numbersOfLetters;
 let currentTry = 1;
 
 // Protected Hints Counter - Cannot be modified from console
-let _numberOfHints = 2;
+let _numberOfHints = 3;
 Object.defineProperty(window, 'numberOfHints', {
   get() {
     return _numberOfHints;
@@ -259,9 +259,20 @@ function restartGame() {
   const newChosen = wordEntries[Math.floor(Math.random() * wordEntries.length)];
   wordToGuess = newChosen.word.toLowerCase();
   wordCategory = newChosen.category || "General";
-  numbersOfLetters = wordToGuess.length;
+  numbersOfLetters = newChosen.word.length;
   currentTry = 1;
-  _numberOfHints = 3;
+  
+  // Set hints based on wins: 1 after 15 wins, 2 after 11 wins, 3 by default
+  if (wordsGuessed >= 15) {
+    _numberOfHints = 1;
+  } else if (wordsGuessed >= 11) {
+    _numberOfHints = 2;
+  } else {
+    _numberOfHints = 3;
+  }
+  
+  // Set tries to 5 if 7 wins reached, otherwise 6
+  numbersOfTries = wordsGuessed >= 7 ? 5 : 6;
   
   // Clear message and inputs
   messageArea.innerHTML = "";
