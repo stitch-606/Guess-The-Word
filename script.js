@@ -296,6 +296,13 @@ document.addEventListener("keydown", handleBackspace);
 
 window.onload = function () {
   generateInput();
+  // Hide loading screen after game elements are loaded
+  setTimeout(() => {
+    const loadingContainer = document.getElementById("loadingContainer");
+    if (loadingContainer) {
+      loadingContainer.classList.add("hidden");
+    }
+  }, 2000); // Show loader for 2 seconds
 };
 
 // Score Management Functions
