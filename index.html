@@ -9,11 +9,18 @@
       <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Loader Animation (replaced) -->
-    <div class="loading-container" id="loadingContainer" aria-hidden="false">
-      <canvas id="scene" class="loader-canvas" width="500" height="500" aria-hidden="true"></canvas>
-      <div class="loading-text">Loading…</div>
-    </div>
+    <script>
+      // Redirect to the standalone loader page unless we've come from it
+      (function() {
+        try {
+          var qs = window.location.search || '';
+          if (!/fromLoader=1/.test(qs) && !/skipLoader=1/.test(qs)) {
+            window.location.replace('loader.html');
+          }
+        } catch (e) { /* ignore */ }
+      })();
+    </script>
+    <!-- Loader moved to standalone `loader.html` -->
 
     <h1></h1>
     <div class="guess-game">
