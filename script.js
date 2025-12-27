@@ -30,20 +30,20 @@ let wordsPlayed = 0;
 let wordToGuess = "";
 // Use words from the external `words.js` file. Support either a simple string list
 // or objects with `{word, category}`. Fallback to a small list if `WORDS` isn't defined.
-let wordCategory = "General";
+let wordCategory = "Random";
 const wordsList = (typeof WORDS !== 'undefined' && Array.isArray(WORDS) && WORDS.length > 0)
   ? WORDS
   : ["apple", "train", "computer", "banana"];
 const wordEntries = wordsList
   .map((w) => {
-    if (typeof w === "string") return { word: w, category: "General" };
-    if (w && typeof w.word === "string") return { word: w.word, category: w.category || "General" };
+    if (typeof w === "string") return { word: w, category: "Random" };
+    if (w && typeof w.word === "string") return { word: w.word, category: w.category || "Random" };
     return null;
   })
   .filter(Boolean);
 const chosenEntry = wordEntries[Math.floor(Math.random() * wordEntries.length)];
 wordToGuess = chosenEntry.word.toLowerCase();
-wordCategory = chosenEntry.category || "General";
+wordCategory = chosenEntry.category || "Random";
 // Show category on the page (element added in `index.html`)
 const categoryEl = document.querySelector(".category-name");
 if (categoryEl) categoryEl.innerText = wordCategory;
@@ -258,7 +258,7 @@ function restartGame() {
   // Reset game state
   const newChosen = wordEntries[Math.floor(Math.random() * wordEntries.length)];
   wordToGuess = newChosen.word.toLowerCase();
-  wordCategory = newChosen.category || "General";
+  wordCategory = newChosen.category || "Random";
   numbersOfLetters = newChosen.word.length;
   currentTry = 1;
   

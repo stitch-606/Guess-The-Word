@@ -167,7 +167,7 @@ function detectCategories(word) {
   for (const [cat, set] of Object.entries(CATEGORY_KEYWORDS)) {
     if (set.has(w)) matches.push(cat);
   }
-  return matches.length > 0 ? matches : ["General"];
+  return matches.length > 0 ? matches : ["Random"];
 }
 
 // Build final WORDS array as objects: { word, category }
