@@ -6,6 +6,7 @@
 }
 body {
   margin: 0;
+  overflow: hidden;
   background-color: #1a1a1a;
   font-family: Arial, Helvetica, sans-serif;
   color: #e0e0e0;
@@ -43,6 +44,7 @@ h1 {
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 60%);
   z-index: 9998;
   gap: 20px;
+  overflow: hidden;
 }
 
 .loading-container.hidden {
@@ -50,12 +52,28 @@ h1 {
 }
 
 .loading-text {
-  font-size: 28px;
-  color: #e0e0e0;
+  font-size: 36px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 10px;
   font-weight: 700;
-  letter-spacing: 1px;
-  text-shadow: 0 0 12px rgba(0,0,0,0.6);
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+  margin-top: 20px;
 }
+
+/* Ensure canvas centers inside the loading container */
+.loading-container .loader-canvas {
+  display: block;
+  margin: 0 auto;
+  width: 500px;
+  height: 500px;
+  max-width: 70vw;
+  max-height: 50vh;
+}
+
+
   padding: 15px 20px;
   border-radius: 8px;
   font-size: 20px;

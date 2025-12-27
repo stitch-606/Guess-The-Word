@@ -9,9 +9,7 @@
   <body>
     <div class="loading-container" id="loadingContainer" aria-hidden="false">
       <canvas id="scene" class="loader-canvas" width="500" height="500" aria-hidden="true"></canvas>
-      <div class="loading-text">Loading…</div>
-      <div id="loadingTimer" class="loading-timer">03:00</div>
-      <button id="skipLoader" style="margin-top:12px;padding:8px 12px;border-radius:6px;border:none;cursor:pointer">Skip</button>
+      <div class="loading-text">HAPPY NEW YEAR</div>
     </div>
 
     <script src="loader.js"></script>
@@ -19,47 +17,19 @@
       // Start the loader animation for this standalone page
       if (window.Loader && typeof Loader.start === 'function') Loader.start();
 
-      // 3 minutes in milliseconds
-      var redirectDelay = 3 * 60 * 1000; // 180000 ms
-
-      function formatTime(ms) {
-        var totalSeconds = Math.max(0, Math.ceil(ms / 1000));
-        var minutes = Math.floor(totalSeconds / 60);
-        var seconds = totalSeconds % 60;
-        return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-      }
-
-      var endTime = Date.now() + redirectDelay;
-      var timerEl = document.getElementById('loadingTimer');
-
-      function updateTimer() {
-        var remaining = endTime - Date.now();
-        if (remaining <= 0) {
-          timerEl.textContent = '00:00';
-          clearInterval(timerInterval);
-        } else {
-          timerEl.textContent = formatTime(remaining);
-        }
-      }
-
-      updateTimer();
-      var timerInterval = setInterval(updateTimer, 1000);
+      // 4 seconds in milliseconds
+      var redirectDelay = 4 * 1000; // 4000 ms
 
       function finish() {
         if (window.Loader && typeof Loader.stop === 'function') Loader.stop();
-        clearInterval(timerInterval);
-        // Navigate to game page and indicate we came from the loader so index.html doesn't redirect back
-        window.location.href = 'index.html?fromLoader=1';
+        // Set a short-lived session flag so index.html knows this navigation came from the loader
+        try { sessionStorage.setItem('skipLoaderOnce', '1'); } catch (e) {}
+        // Navigate to the game page without persistent query params
+        window.location.href = 'index.html';
       }
 
       // Redirect after the delay
       var t = setTimeout(finish, redirectDelay);
-
-      // Allow skipping immediately
-      document.getElementById('skipLoader').addEventListener('click', function () {
-        clearTimeout(t);
-        finish();
-      });
     </script>
   </body>
 </html>

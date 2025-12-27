@@ -7,8 +7,8 @@
   var ctx = null;
 
   var defaults = {
-    width: 500,
-    height: 500,
+    width: window.innerWidth,
+    height: window.innerHeight,
     dpr: window.devicePixelRatio || 1
   };
 
@@ -31,6 +31,12 @@
     canvas.height = Math.round(h * dpr);
     ctx = canvas.getContext('2d');
     if (dpr !== 1) ctx.scale(dpr, dpr);
+
+    // center and scale based on canvas size (so animation appears in the true center)
+    xScreenOffset = w / 2;
+    yScreenOffset = h / 2;
+    xScreenScale = w * 0.72; // maintain same relative scale as original
+    yScreenScale = h * 0.72;
   }
 
   // --- The animation code ---
@@ -89,12 +95,12 @@
 
   function initSpirals() {
     spirals = [
-      new Spiral({ foreground: '#220000', angleOffset: Math.PI * 0.92, factor: 0.90 * factor }),
-      new Spiral({ foreground: '#002211', angleOffset: -Math.PI * 0.08, factor: 0.90 * factor }),
-      new Spiral({ foreground: '#660000', angleOffset: Math.PI * 0.95, factor: 0.93 * factor }),
+      new Spiral({ foreground: '#f7f4f4ff', angleOffset: Math.PI * 0.92, factor: 0.90 * factor }),
+      new Spiral({ foreground: '#0aeb7aff', angleOffset: -Math.PI * 0.08, factor: 0.90 * factor }),
+      new Spiral({ foreground: '#fa0b0bff', angleOffset: Math.PI * 0.95, factor: 0.93 * factor }),
       new Spiral({ foreground: '#003322', angleOffset: -Math.PI * 0.05, factor: 0.93 * factor }),
-      new Spiral({ foreground: '#ff0000', angleOffset: Math.PI, factor: factor }),
-      new Spiral({ foreground: '#00ffcc', angleOffset: 0, factor: factor })
+      new Spiral({ foreground: '#0ca018ff', angleOffset: Math.PI, factor: factor }),
+      new Spiral({ foreground: '#09ff00ff', angleOffset: 0, factor: factor })
     ];
   }
 

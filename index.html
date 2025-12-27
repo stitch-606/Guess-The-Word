@@ -10,13 +10,18 @@
   </head>
   <body>
     <script>
-      // Redirect to the standalone loader page unless we've come from it
+      // Redirect to the standalone loader page unless we're returning from it this navigation.
+      // The loader sets `sessionStorage.skipLoaderOnce` when it redirects here; consume & clear it.
       (function() {
         try {
-          var qs = window.location.search || '';
-          if (!/fromLoader=1/.test(qs) && !/skipLoader=1/.test(qs)) {
-            window.location.replace('loader.html');
+          var skip = false;
+          try { skip = sessionStorage.getItem('skipLoaderOnce') === '1'; } catch (e) { skip = false; }
+          if (skip) {
+            try { sessionStorage.removeItem('skipLoaderOnce'); } catch (e) {}
+            return; // don't redirect — we came from loader just now
           }
+          // Otherwise, send user to loader page
+          window.location.replace('loader.html');
         } catch (e) { /* ignore */ }
       })();
     </script>

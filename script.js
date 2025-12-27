@@ -295,19 +295,15 @@ function restartGame() {
 document.addEventListener("keydown", handleBackspace);
 
 window.onload = function () {
-  // Start the loader (if available) while we prepare the UI
-  if (window.Loader && typeof Loader.start === 'function') Loader.start();
-
+  // Generate UI
   generateInput();
 
   // Stop loader and hide loading container once UI is ready
-  setTimeout(() => {
-    if (window.Loader && typeof Loader.stop === 'function') Loader.stop();
-    const loadingContainer = document.getElementById("loadingContainer");
-    if (loadingContainer) {
-      loadingContainer.classList.add("hidden");
-    }
-  }, 600); // short delay so loader is visible briefly
+  if (window.Loader && typeof Loader.stop === 'function') Loader.stop();
+  const loadingContainer = document.getElementById("loadingContainer");
+  if (loadingContainer) {
+    loadingContainer.classList.add("hidden");
+  }
 };
 
 // Score Management Functions
